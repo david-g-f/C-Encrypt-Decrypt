@@ -49,13 +49,22 @@ void fileDecrypt(FILE* in, FILE* out, int key)
 
 } 
 
+void removeSub(char* str, const char* delim){ //Auxiliary function for ease of life
+    char* match = strstr(str, delim); // Locate the substring of a given delimiter in a string
+    if (match != NULL){
+        *match = '\0'; // If substring exists, replace it with a null terminator.
+    }
+}
+
 int main(int argc, char *argv[]){
 
     srand(time(NULL)); // Random number key generator purposes
+    const char delim1[] = ".txt";
+    const char delim2[] = "_crypt.txt";
 
     // Error handling
     if (argc < 3){
-        fprintf(stderr, "Too little arguments passed.\nUsage: %s <filename> [-e/-d options]\n");
+        fprintf(stderr, "Too little arguments passed.\nUsage: <filename> [-e/-d options]\n");
         return 1;
     }
     if (argc > 3){
@@ -64,25 +73,30 @@ int main(int argc, char *argv[]){
     }
 
     // Basic command-line parsing
-    if (argv[2] = "-e"){
+    if (strcmp(argv[2], "-e") == 0){
         FILE * inp = fopen(argv[1], "r");
         if (inp == NULL){
             fprintf(stderr, "Error reading file %s during encryption.\n", argv[1]);
             return 1;
         }
-        FILE * out = fopen("crypt.txt", "w");
+
+        char * fName = argv[1];
+        removeSub(fName, delim1);
+
+        char * fileName = strcat(fName, "_crypt.txt");
+        FILE * out = fopen(fileName, "w");
         
         fileEncrypt(inp, out);
         fclose(inp);
         fclose(out);
 
-        printf("Success in encrypting file. Results stored in crypt.txt.\n");
+        printf("Success in encrypting file. Results stored in %s.\n", fileName);
         return 0;
     }
 
-    else if(argv[2] = "-d"){
+    else if(strcmp(argv[2], "-d") == 0){
         int key;
-        printf("Enter the key that was designated to you from encryption.\n NOTE that an inaccurate key may result in jumbled and/or inaccurate text.\n");
+        printf("Enter the key that was designated to you from encryption.\nNOTE that an inaccurate key may result in jumbled and/or inaccurate text.\n");
         scanf("%d", &key);
         printf("\nYou have entered %d.\n", key);
         
@@ -91,13 +105,17 @@ int main(int argc, char *argv[]){
             fprintf(stderr, "Error reading file %s during decryption.\n", argv[1]);
             return 1;
         }
-        FILE * out = fopen("decrypt.txt", "w");
+        char * fName = argv[1];
+        removeSub(fName, delim2);
+
+        char * fileName = strcat(fName, "_decrypt.txt");
+        FILE * out = fopen(fileName, "w");
 
         fileDecrypt(inp, out, key);
         fclose(inp);
         fclose(out);
 
-        printf("Success in decrypting file %s with given key %d. Results stored in decrypt.txt.\n", argv[1], key);
+        printf("Success in decrypting file %s with given key %d. Results stored in %s.\n", argv[1], key, fileName);
         return 0;
     }
 
