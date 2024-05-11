@@ -10,8 +10,6 @@
  * Program will be ran through terminal with a second argument being the file, and a third argument choosing whether to encrypt or decrypt. 
  * This will work with .txt files for now.
  * 
- * 
- * 
 */
 void fileEncrypt(FILE* in, FILE* out) 
 {
