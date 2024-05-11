@@ -21,6 +21,16 @@ void fileEncrypt(FILE* in, FILE* out)
     int randKey = 1 + (rand() % (max)); // Generates a number between 1 and 64 inclusive
     printf("Your generated key for this file is: %d\n", randKey);
 
+    int len;
+    char buffer[BUFFER]; // Stores chunks of text data from input file to edit.
+
+    while (fgets(buffer, (sizeof(char) * BUFFER), in) != 0){
+        len = strlen(buffer);
+        for (int i = 0; i < len; i++){
+            buffer[i] -= randKey;
+        }
+        fputs(buffer, out);
+    }
 
 } 
 
