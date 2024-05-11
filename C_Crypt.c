@@ -36,6 +36,16 @@ void fileEncrypt(FILE* in, FILE* out)
 
 void fileDecrypt(FILE* in, FILE* out, int key)
 {
+    int len;
+    char buffer[BUFFER];
+
+    while(fgets(buffer, (sizeof(char) * BUFFER), in) != 0){
+        len = strlen(buffer);
+        for (int i = 0; i < len; i++){
+            buffer[i] += key;
+        }
+        fputs(buffer, out);
+    }
 
 } 
 
@@ -95,31 +105,5 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "Error parsing given option. Please try again (-e or -d).\n");
         return 1;
     }
-
-
-    // FILE * readFile; // Opens file in read format
-    // FILE * outputFile; // Create a file to store the output
-
-    // int len;
-    // char buff[BUFFER];
-
-    // readFile = fopen(argv[1], "r");
-    // if (readFile == NULL){
-    //     fprintf(stderr, "Error opening and reading file %s.\n", argv[1]);
-    //     return 1;
-    // }
-
-    // outputFile = fopen("crypt.txt", "w");
-
-    // while (fgets(buff, (sizeof(char) * BUFFER), readFile) != NULL) // Take in all lines of string from the file.
-    // {
-    //     len = strlen(buff);
-    //     for (int i = 0; i < len; i++){
-    //         buff[i] -= 45; // Subtract 45 from the ASCII value of each letter in the chunk read.
-    //     }
-    //     fputs(buff, outputFile); // Enter the converted string into the output file.
-    // }
-
-
 
 }
